@@ -83,13 +83,13 @@ const startServer = async () => {
     await connectRedis();
 
     const server = app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`📊 Environment: ${process.env['NODE_ENV'] || 'development'}`);
       console.log(`🔗 Health check: http://localhost:${PORT}/health`);
       console.log(`🔐 Auth endpoints: http://localhost:${PORT}/api/auth`);
       console.log(`🛒 Cart endpoints: http://localhost:${PORT}/api/cart`);
       console.log(`📦 Product endpoints: http://localhost:${PORT}/api/products`);
       console.log(`📤 Upload endpoints: http://localhost:${PORT}/api/upload`);
+      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`📊 Environment: ${process.env['NODE_ENV'] || 'development'}`);
     });
 
     // Graceful shutdown
