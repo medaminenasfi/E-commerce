@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ShoppingCart, Heart, Star, Truck, Shield } from 'lucide-react';
+import { ShoppingCart, Heart, Star, Truck } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import QuantityStepper from '../components/QuantityStepper';
 import api from '../api/axios';

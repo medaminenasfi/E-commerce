@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trash2 } from 'lucide-react';
-import { CartItem as CartItemType } from '../types';
+import type { CartItem as CartItemType } from '../types';
 import { useCart } from '../contexts/CartContext';
 import QuantityStepper from './QuantityStepper';
 
