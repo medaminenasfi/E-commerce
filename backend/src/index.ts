@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
+import adminRoutes from './routes/admin';
 
 import { connectDatabase } from './config/database';
 import { connectRedis } from './config/redis';
@@ -20,6 +21,7 @@ const PORT = process.env['PORT'] || 3000;
 
 // Security middleware
 app.use(helmet());
+app.use('/api/admin', adminRoutes);
 
 // CORS configuration
 const corsOptions = {
