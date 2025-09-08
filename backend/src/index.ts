@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import adminRoutes from './routes/admin';
+import categoryRoutes from './routes/category';
 
 import { connectDatabase } from './config/database';
 import { connectRedis } from './config/redis';
@@ -21,7 +22,13 @@ const PORT = process.env['PORT'] || 3000;
 
 // Security middleware
 app.use(helmet());
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Register routes after body parsing
 app.use('/api/admin', adminRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // CORS configuration
 const corsOptions = {
