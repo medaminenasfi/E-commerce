@@ -5,6 +5,8 @@ export const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name cannot exceed 100 characters'),
   email: z.string().email('Please enter a valid email'),
   password: z.string().min(6, 'Password must be at least 6 characters').max(100, 'Password cannot exceed 100 characters'),
+  role: z.enum(['user', 'admin']).optional(),
+
 });
 
 export const loginSchema = z.object({

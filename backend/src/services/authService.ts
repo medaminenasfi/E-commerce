@@ -16,13 +16,15 @@ export class AuthService {
     if (existingUser) {
       throw new ConflictError('User with this email already exists');
     }
-
+const role = userData.role && ['admin', 'user'].includes(userData.role)
+  ? userData.role
+  : 'user';
     // Create new user
     const user = new User({
       name,
       email: email.toLowerCase(),
       passwordHash: password, // Will be hashed by pre-save middleware
-      role: 'user',
+      role,
     });
 
     await user.save();
