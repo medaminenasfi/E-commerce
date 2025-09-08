@@ -53,6 +53,11 @@ const role = userData.role && ['admin', 'user'].includes(userData.role)
       throw new AuthenticationError('Invalid email or password');
     }
 
+    // Prevent banned users from logging in
+    if (user.banned) {
+      throw new AuthenticationError('Your account has been banned.');
+    }
+
     // Verify password
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
