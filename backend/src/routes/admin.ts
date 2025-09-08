@@ -28,6 +28,28 @@ router.delete('/users/:id', authenticate, isAdmin, async (req, res) => {
 
 export default router;
 
+// Update a user (admin only)
+router.put('/users/:id', authenticate, isAdmin, async (req, res) => {
+    const { id } = req.params;
+    const { name, email, role, banned } = req.body;
+    const update: any = {};
+    if (name !== undefined) update.name = name;
+    if (email !== undefined) update.email = email.toLowerCase();
+    if (role !== undefined) update.role = role;
+    if (banned !== undefined) update.banned = banned;
+
+    const user = await User.findByIdAndUpdate(id, update, { new: true });
+    if (!user) {
+        return res.status(404).json({
+            error: {
+                code: 'NOT_FOUND_ERROR',
+                message: 'User not found',
+            },
+        });
+    }
+    res.status(200).json({ message: 'User updated successfully', user });
+});
+
 // Ban a user (admin only)
 router.patch('/users/:id/ban', authenticate, isAdmin, async (req, res) => {
     const { id } = req.params;
