@@ -1,5 +1,5 @@
 {
-  "name": "shop-backend",
+  "name": "y",
   "version": "1.0.0",
   "description": "E-commerce backend API with TypeScript, Express, and MongoDB",
   "main": "dist/index.js",
@@ -60,5 +60,8 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "directories": {
+    "test": "tests"
   }
 }

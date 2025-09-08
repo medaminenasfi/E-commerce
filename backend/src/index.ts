@@ -11,9 +11,6 @@ import { errorHandler, notFoundHandler } from './middlewares/errorHandler';
 
 // Import routes
 import authRoutes from './routes/auth';
-import cartRoutes from './routes/cart';
-import productRoutes from './routes/products';
-import uploadRoutes from './routes/upload';
 
 // Load environment variables
 dotenv.config();
@@ -65,9 +62,7 @@ app.get('/health', (_req, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
-app.use('/api/cart', cartRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/upload', uploadRoutes);
+
 
 // 404 handler
 app.use(notFoundHandler);
@@ -79,19 +74,16 @@ app.use(errorHandler);
 const startServer = async () => {
   try {
     // Connect to databases
-    await connectDatabase();
-    await connectRedis();
+  
 
     const server = app.listen(PORT, () => {
       console.log(`🔗 Health check: http://localhost:${PORT}/health`);
       console.log(`🔐 Auth endpoints: http://localhost:${PORT}/api/auth`);
-      console.log(`🛒 Cart endpoints: http://localhost:${PORT}/api/cart`);
-      console.log(`📦 Product endpoints: http://localhost:${PORT}/api/products`);
-      console.log(`📤 Upload endpoints: http://localhost:${PORT}/api/upload`);
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env['NODE_ENV'] || 'development'}`);
     });
-
+  await connectDatabase();
+    await connectRedis();
     // Graceful shutdown
     const gracefulShutdown = async (signal: string) => {
       console.log(`\n${signal} received. Starting graceful shutdown...`);

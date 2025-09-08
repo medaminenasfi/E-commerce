@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { authService } from '../services/authService';
-import { cartService } from '../services/cartService';
 import { AuthenticatedRequest, CartRequest } from '../middlewares/errorHandler';
 import { asyncHandler } from '../middlewares/errorHandler';
 import { HTTP_STATUS } from '../utils/errors';
@@ -226,11 +225,9 @@ export class AuthController {
       return;
     }
 
-    const mergedCart = await cartService.mergeGuestCart(sessionId, req.user.userId);
 
     res.status(HTTP_STATUS.OK).json({
       message: 'Cart merged successfully',
-      cart: mergedCart,
     });
   });
 }
