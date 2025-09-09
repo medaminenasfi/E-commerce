@@ -6,6 +6,7 @@ import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import adminRoutes from './routes/admin';
 import categoryRoutes from './routes/category';
+import productRoutes from './routes/product';
 
 import { connectDatabase } from './config/database';
 import { connectRedis } from './config/redis';
@@ -29,6 +30,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Register routes after body parsing
 app.use('/api/admin', adminRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/products', productRoutes);
 
 // CORS configuration
 const corsOptions = {
