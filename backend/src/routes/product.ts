@@ -1,5 +1,3 @@
-
-
 import { Router } from 'express';
 import { authenticate } from '../middlewares/auth';
 import { isAdmin } from '../middlewares/admin';
@@ -9,6 +7,8 @@ import { Product } from '../models/Product';
 import { AuthenticatedRequest } from '../middlewares/errorHandler';
 
 const router = Router();
+
+// --- Review Routes ---
 
 // Add a review to a product (user only)
 router.post('/:id/reviews', authenticate, async (req: AuthenticatedRequest, res) => {
@@ -97,34 +97,44 @@ router.delete('/:productId/reviews/:reviewId/admin', authenticate, isAdmin, asyn
   await product.save();
   res.status(200).json({ message: 'Review deleted by admin' });
 });
-// Add a review to a product (user only)
-router.post('/:id/reviews', authenticate, async (req: AuthenticatedRequest, res) => {
-  const { id } = req.params;
-  const { rating, comment } = req.body;
-  if (!rating || rating < 1 || rating > 5) {
-    return res.status(400).json({
-      error: { code: 'VALIDATION_ERROR', message: 'Rating must be between 1 and 5' },
-    });
+
+// --- Product CRUD ---
+
+// Get products by category
+router.get('/category/:categoryId', async (req, res) => {
+  const { categoryId } = req.params;
+  const products = await Product.find({ categoryId });
+  res.status(200).json({ products });
+});
+
+// Search and filter products with pagination
+// Example: /api/products/search?query=iphone&category=123&minPrice=100&maxPrice=2000&page=1&limit=10
+router.get('/search', async (req, res) => {
+  const { query, category, minPrice, maxPrice, page = 1, limit = 10 } = req.query;
+  const filter: any = {};
+
+  if (query) {
+    filter.name = { $regex: query as string, $options: 'i' };
   }
-  if (!comment || typeof comment !== 'string') {
-    return res.status(400).json({
-      error: { code: 'VALIDATION_ERROR', message: 'Comment is required' },
-    });
+  if (category) {
+    filter.categoryId = category;
   }
-  const product = await Product.findById(id);
-  if (!product) {
-    return res.status(404).json({
-      error: { code: 'NOT_FOUND_ERROR', message: 'Product not found' },
-    });
+  if (minPrice || maxPrice) {
+    filter['variants.price'] = {};
+    if (minPrice) filter['variants.price'].$gte = Number(minPrice);
+    if (maxPrice) filter['variants.price'].$lte = Number(maxPrice);
   }
-  product.reviews.push({
-    user: new (require('mongoose')).Types.ObjectId(req.user!.userId),
-    rating,
-    comment,
-    createdAt: new Date(),
+
+  const skip = (Number(page) - 1) * Number(limit);
+  const products = await Product.find(filter).skip(skip).limit(Number(limit));
+  const total = await Product.countDocuments(filter);
+
+  res.status(200).json({
+    products,
+    total,
+    page: Number(page),
+    pages: Math.ceil(total / Number(limit)),
   });
-  await product.save();
-  res.status(201).json({ message: 'Review added', reviews: product.reviews });
 });
 
 // Get all products (public)
