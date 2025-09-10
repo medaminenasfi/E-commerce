@@ -43,5 +43,57 @@
   },
   "devDependencies": {
     "cross-env": "^10.0.0"
+  },
+  "description": "This is a full-stack E-commerce application built with a React frontend and a backend running on Node.js/Express. The project is designed to provide a seamless shopping experience with features like product browsing, cart management, and order processing.",
+  "readmeFilename": "README.md",
+  "homepage": ".",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/e-commerce-frontend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/e-commerce-frontend/issues"
+  },
+  "license": "MIT",
+  "author": "Your Name <youremail@example.com>",
+  "keywords": [
+    "e-commerce",
+    "shopping",
+    "react",
+    "node",
+    "express",
+    "mongodb"
+  ],
+  "main": "index.js",
+  "directories": {
+    "lib": "src",
+    "test": "__tests__"
+  },
+  "scripts": {
+    "start": "cross-env PORT=3001 react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "cross-env": "^10.0.0"
   }
 }
