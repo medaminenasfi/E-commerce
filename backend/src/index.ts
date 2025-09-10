@@ -8,6 +8,7 @@ import adminRoutes from './routes/admin';
 import categoryRoutes from './routes/category';
 import productRoutes from './routes/product';
 import cartRoutes from './routes/cart';
+import wishlistRoutes from './routes/wishlist';
 
 import { connectDatabase } from './config/database';
 import { connectRedis } from './config/redis';
@@ -33,6 +34,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 // CORS configuration
 const corsOptions = {
