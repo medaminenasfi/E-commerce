@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { authenticate } from '../middlewares/auth';
 import { isAdmin } from '../middlewares/admin';
 import { User } from '../models/User';
@@ -6,13 +6,13 @@ import { User } from '../models/User';
 const router = Router();
 
 // GET all users (admin only)
-router.get('/users', authenticate, isAdmin, async (_req, res) => {
+router.get('/users', authenticate, isAdmin, async (_req: Request, res: Response) => {
     const users = await User.find().select('-passwordHash');
     res.status(200).json({ users });
 });
 
 // DELETE a user by id (admin only)
-router.delete('/users/:id', authenticate, isAdmin, async (req, res) => {
+router.delete('/users/:id', authenticate, isAdmin, async (req: Request, res: Response) => {
     const { id } = req.params;
     const user = await User.findByIdAndDelete(id);
     if (!user) {
@@ -29,7 +29,7 @@ router.delete('/users/:id', authenticate, isAdmin, async (req, res) => {
 export default router;
 
 // Update a user (admin only)
-router.put('/users/:id', authenticate, isAdmin, async (req, res) => {
+router.put('/users/:id', authenticate, isAdmin, async (req: Request, res: Response) => {
     const { id } = req.params;
     const { name, email, role, banned } = req.body;
     const update: any = {};
@@ -51,7 +51,7 @@ router.put('/users/:id', authenticate, isAdmin, async (req, res) => {
 });
 
 // Ban a user (admin only)
-router.patch('/users/:id/ban', authenticate, isAdmin, async (req, res) => {
+router.patch('/users/:id/ban', authenticate, isAdmin, async (req: Request, res: Response) => {
     const { id } = req.params;
     const user = await User.findByIdAndUpdate(id, { banned: true }, { new: true });
     if (!user) {
@@ -66,7 +66,7 @@ router.patch('/users/:id/ban', authenticate, isAdmin, async (req, res) => {
 });
 
 // Unban a user (admin only)
-router.patch('/users/:id/unban', authenticate, isAdmin, async (req, res) => {
+router.patch('/users/:id/unban', authenticate, isAdmin, async (req: Request, res: Response) => {
     const { id } = req.params;
     const user = await User.findByIdAndUpdate(id, { banned: false }, { new: true });
     if (!user) {

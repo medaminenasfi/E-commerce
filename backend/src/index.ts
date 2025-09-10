@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import adminRoutes from './routes/admin';
 import categoryRoutes from './routes/category';
 import productRoutes from './routes/product';
+import cartRoutes from './routes/cart';
 
 import { connectDatabase } from './config/database';
 import { connectRedis } from './config/redis';
@@ -31,6 +32,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/api/admin', adminRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/cart', cartRoutes);
 
 // CORS configuration
 const corsOptions = {

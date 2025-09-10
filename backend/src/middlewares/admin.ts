@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
-import { AuthenticatedRequest } from './errorHandler';
 import { HTTP_STATUS } from '../utils/errors';
+import { AuthenticatedRequest } from './auth';
 
 export const isAdmin = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const user = req.user;
