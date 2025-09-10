@@ -17,6 +17,8 @@ import { errorHandler, notFoundHandler } from './middlewares/errorHandler';
 
 // Import routes
 import authRoutes from './routes/auth';
+import adminDashboardRoutes from './routes/adminDashboard';
+import userDashboardRoutes from './routes/userDashboard';
 
 // Load environment variables
 dotenv.config();
@@ -37,6 +39,8 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/admin', adminDashboardRoutes);
+app.use('/api/user', userDashboardRoutes);
 
 // CORS configuration
 const corsOptions = {
