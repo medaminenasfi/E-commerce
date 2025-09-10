@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import { redisClient } from './redis';
 
 export interface JWTPayload {
+  id: any;
   userId: string;
   email: string;
   role: string;

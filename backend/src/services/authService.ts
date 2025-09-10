@@ -31,6 +31,7 @@ const role = userData.role && ['admin', 'user'].includes(userData.role)
 
     // Generate tokens
     const payload: JWTPayload = {
+      id: user._id.toString(), // Add the `id` property
       userId: user._id.toString(),
       email: user.email,
       role: user.role,
@@ -66,6 +67,7 @@ const role = userData.role && ['admin', 'user'].includes(userData.role)
 
     // Generate tokens
     const payload: JWTPayload = {
+      id: user._id.toString(), // Add the `id` property
       userId: user._id.toString(),
       email: user.email,
       role: user.role,

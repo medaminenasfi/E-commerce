@@ -3,6 +3,7 @@ import { formatErrorResponse, AppError, HTTP_STATUS } from '../utils/errors';
 
 export interface AuthenticatedRequest extends Request {
   user?: {
+    id: string; // Add the `id` field
     userId: string;
     email: string;
     role: string;

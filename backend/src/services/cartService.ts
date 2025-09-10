@@ -1,9 +1,25 @@
-import Cart, {  } from '../models/Cart';
+import Cart, { ICartItem } from '../models/Cart';
 import { Types } from 'mongoose';
 import mongoose from 'mongoose';
+import { Router } from 'express';
+// Update the path below if your auth middleware is located elsewhere
+// Update the path below to the correct location of your auth middleware
+// import { authenticate } from '../middleware/auth'; // <-- Ensure this file exists, or update the path accordingly
+// TODO: Update the path below to the correct location of your auth middleware
+import { authenticate } from '../middlewares/auth'; // Example: change 'auth' to 'authenticate' if that's the correct file
+import { placeOrder, trackOrder, cancelOrder, adminViewOrders, adminUpdateOrder } from '../controllers/orderController';
+import { isAdmin } from '../middlewares/admin';
+
+const router = Router();
 
 export const getCart = async (userId: string) => {
-  let cart = await Cart.findOne({ user: userId }).populate('items.product');
+  console.log('Fetching cart for userId:', userId);
+  let cart = await Cart.findOne({ user: userId }).populate({
+    path: 'items.product',
+    select: 'name variants', // Include name and variants fields
+  });
+  console.log('Cart retrieved:', cart); // Log the retrieved cart
+  console.log('Populated cart:', cart); // Log the populated cart data
   if (!cart) {
     cart = await Cart.create({ user: userId, items: [] });
   }
@@ -16,7 +32,7 @@ export const addToCart = async (userId: string, productId: string, quantity: num
   if (itemIndex > -1) {
     cart.items[itemIndex].quantity += quantity;
   } else {
-    cart.items.push({ product: new Types.ObjectId(productId), quantity });
+    cart.items.push({ product: new Types.ObjectId(productId), quantity } as ICartItem);
   }
   await cart.save();
   return cart;
@@ -70,3 +86,17 @@ export const clearCart = async (userId: string) => {
   const wasCleared = cart.items.length === 0; // Check if the cart was cleared
   return { cart, wasCleared };
 };
+
+// User routes
+router.post('/', authenticate, placeOrder);
+router.get('/:id', authenticate, trackOrder);
+router.delete('/:id', authenticate, cancelOrder);
+
+// Admin routes
+router.get('/admin', authenticate, isAdmin, adminViewOrders);
+router.patch('/admin/:id', authenticate, isAdmin, adminUpdateOrder);
+
+// Removed undefined 'trackOrder' route handler
+export default router;
+
+// Removed invalid import and Express app code that does not belong in this service file.

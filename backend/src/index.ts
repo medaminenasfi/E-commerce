@@ -9,6 +9,7 @@ import categoryRoutes from './routes/category';
 import productRoutes from './routes/product';
 import cartRoutes from './routes/cart';
 import wishlistRoutes from './routes/wishlist';
+import orderRoutes from './routes/order';
 
 import { connectDatabase } from './config/database';
 import { connectRedis } from './config/redis';
@@ -35,6 +36,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/orders', orderRoutes);
 
 // CORS configuration
 const corsOptions = {
@@ -143,3 +145,17 @@ const startServer = async () => {
 
 // Start the server
 startServer();
+
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+        userId: string;
+        email: string;
+        role: string;
+      };
+    }
+  }
+}

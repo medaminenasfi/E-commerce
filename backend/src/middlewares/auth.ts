@@ -4,6 +4,7 @@ import { AuthenticationError, ForbiddenError } from '../utils/errors';
 
 export interface AuthenticatedRequest extends Request {
   user?: {
+    id: any;
     userId: string;
     email: string;
     role: string;
@@ -19,8 +20,8 @@ export const authenticate = (req: AuthenticatedRequest, _res: Response, next: Ne
 
     const token = authHeader.substring(7);
     const payload = verifyAccessToken(token);
-    // Ensure payload matches the expected user type
     req.user = {
+      id: payload.id,
       userId: payload.userId,
       email: payload.email,
       role: payload.role,
@@ -55,6 +56,7 @@ export const optionalAuth = (req: AuthenticatedRequest, _res: Response, next: Ne
       const token = authHeader.substring(7);
       const payload = verifyAccessToken(token);
       req.user = {
+        id: payload.id,
         userId: payload.userId,
         email: payload.email,
         role: payload.role,
@@ -65,3 +67,7 @@ export const optionalAuth = (req: AuthenticatedRequest, _res: Response, next: Ne
   }
   next();
 };
+function next(arg0: AuthenticationError) {
+  throw new Error('Function not implemented.');
+}
+
