@@ -28,27 +28,21 @@ const PORT = process.env['PORT'] || 3000;
 
 // Security middleware
 app.use(helmet());
-// Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Register routes after body parsing
-app.use('/api/admin', adminRoutes);
-app.use('/api/categories', categoryRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/cart', cartRoutes);
-app.use('/api/wishlist', wishlistRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/admin', adminDashboardRoutes);
-app.use('/api/user', userDashboardRoutes);
-
-// CORS configuration
+// CORS configuration (must be before any routes)
 const corsOptions = {
-  origin: process.env['CORS_ORIGIN'] || 'http://localhost:3000',
+  origin: ['http://localhost:3000', 'http://localhost:3001'],
   credentials: true,
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
+
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Cookie parser
+app.use(cookieParser(process.env['COOKIE_SECRET']));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -65,13 +59,6 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Cookie parser
-app.use(cookieParser(process.env['COOKIE_SECRET']));
-
 // Health check endpoint
 app.get('/health', (_req, res) => {
   res.status(200).json({
@@ -83,7 +70,14 @@ app.get('/health', (_req, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
-
+app.use('/api/admin', adminRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/admin', adminDashboardRoutes);
+app.use('/api/user', userDashboardRoutes);
 
 // 404 handler
 app.use(notFoundHandler);
@@ -94,27 +88,20 @@ app.use(errorHandler);
 // Start server
 const startServer = async () => {
   try {
-    // Connect to databases
-  
-
     const server = app.listen(PORT, () => {
       console.log(`🔗 Health check: http://localhost:${PORT}/health`);
       console.log(`🔐 Auth endpoints: http://localhost:${PORT}/api/auth`);
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env['NODE_ENV'] || 'development'}`);
     });
-  await connectDatabase();
+    await connectDatabase();
     await connectRedis();
     // Graceful shutdown
     const gracefulShutdown = async (signal: string) => {
       console.log(`\n${signal} received. Starting graceful shutdown...`);
-      
-      // Close server
       server.close(() => {
         console.log('HTTP server closed.');
       });
-
-      // Close database connections
       try {
         await require('./config/database').disconnectDatabase();
         await require('./config/redis').disconnectRedis();
@@ -125,31 +112,23 @@ const startServer = async () => {
         process.exit(1);
       }
     };
-
-    // Handle graceful shutdown
     process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
     process.on('SIGINT', () => gracefulShutdown('SIGINT'));
-
-    // Handle uncaught exceptions
     process.on('uncaughtException', (error) => {
       console.error('Uncaught Exception:', error);
       gracefulShutdown('uncaughtException');
     });
-
     process.on('unhandledRejection', (reason, promise) => {
       console.error('Unhandled Rejection at:', promise, 'reason:', reason);
       gracefulShutdown('unhandledRejection');
     });
-
   } catch (error) {
     console.error('Failed to start server:', error);
     process.exit(1);
   }
 };
 
-// Start the server
 startServer();
-
 
 declare global {
   namespace Express {
