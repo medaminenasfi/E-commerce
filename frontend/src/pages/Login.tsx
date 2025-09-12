@@ -26,17 +26,15 @@ const Login: React.FC = () => {
         credentials: "include",
         body: JSON.stringify(form),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error?.message || data.message || "Login failed");
-      setSuccess(true);
 
-      // Fetch user profile and set context
-      const profileRes = await fetch("/api/auth/profile", { credentials: "include" });
-      if (profileRes.ok) {
-        const profileData = await profileRes.json();
-        setUser(profileData.user);
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data?.error?.message || data.message || "Login failed");
       }
 
+      setSuccess(true);
+
+      // Redirect to dashboard after successful login
       setTimeout(() => navigate("/dashboard"), 1200);
     } catch (err: any) {
       setError(err.message);
