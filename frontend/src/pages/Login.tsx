@@ -32,6 +32,13 @@ const Login: React.FC = () => {
         throw new Error(data?.error?.message || data.message || "Login failed");
       }
 
+      const data = await res.json();
+      setUser({
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+      });
+
       setSuccess(true);
 
       // Redirect to dashboard after successful login

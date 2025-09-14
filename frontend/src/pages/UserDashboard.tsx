@@ -13,7 +13,7 @@ const UserDashboard: React.FC = () => {
       <h2 className="text-2xl font-bold mb-4">User Dashboard</h2>
       <div className="mb-2"><strong>Name:</strong> {user.name}</div>
       <div className="mb-2"><strong>Email:</strong> {user.email}</div>
-      <div className="mb-2"><strong>Role:</strong> {user.role}</div>
+      {/* <div className="mb-2"><strong>Role:</strong> {user.role}</div> */}
     </div>
   );
 };
